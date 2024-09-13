@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인사관리</title>
+    <link rel="stylesheet" type="text/css" href="/hr/css/view.css"/>
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-gothic.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/hr/css/view.css">
+</head>
+
+<body>
+<header class="flex">
+    <img src="../../static/hr/img/Logo.png" alt="Logo" style="width: 300px;"/>
+    <div class="user">
+
+        <img src="../../static/hr/img/userCircle.png" alt="userCircle" class="user-photo"/>
+        <div class="flex user-content">
+            <div class="user-name">강현구</div>
+            <div>개발1팀 / 사원</div>
+            <div>cha@oneshot.com</div>
+        </div>
+    </div>
+</header>
+<div class="flex wrap">
+
+    <!--사이드바-->
+    <!--사이드바-->
+    <aside class="aside left2">
+        <div class="category">
+            <div class="title">홈</div>
+            <div class="submenu">
+                <a href="#">서브메뉴1</a>
+                <a href="#">서브메뉴2</a>
+            </div>
+        </div>
+        <div class="category">
+            <div class="title">인사관리</div>
+            <div class="submenu">
+                <a href="#">사원관리</a>
+                <a href="#">부서관리</a>
+            </div>
+        </div>
+        <div class="category">
+            <div class="title">재고관리</div>
+            <div class="submenu">
+                <a href="#">재고내역관리</a>
+                <a href="#">구매내역관리</a>
+                <a href="#">공급업체관리</a>
+            </div>
+        </div>
+        <div class="category">
+            <div class="title">영업관리</div>
+            <div class="submenu">
+                <a href="#">거래가격관리</a>
+                <a href="#">판매내역관리</a>
+            </div>
+        </div>
+
+
+    </aside>
+
+
+    <!--메인 내용-->
+    <div id="root" class="content"></div>
+
+
+</div>
+<script th:src="@{'/bundle/' + ${pageName} + '.bundle.js'}"></script>
+</body>
+
+</html>

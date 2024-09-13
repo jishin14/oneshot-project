@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<script>
+  window.onload = function () {
+    // 드래그 기능을 추가할 팝업창 요소 선택
+    const popupModify = document.getElementById('popup-modify');
+    const popupRegist = document.getElementById('popup-regist');
+
+    // 드래그 가능하게 만들기
+    makeDraggable(popupModify);
+    makeDraggable(popupRegist);
+  };
+
+  // 드래그 가능하게 하는 함수
+  function makeDraggable(element) {
+    let isDragging = false;
+    let offsetX, offsetY;
+    const header = element.querySelector('.popup-content');
+
+    header.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      offsetX = e.clientX - element.getBoundingClientRect().left;
+      offsetY = e.clientY - element.getBoundingClientRect().top;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        element.style.left = `${e.clientX - offsetX}px`;
+        element.style.top = `${e.clientY - offsetY}px`;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  }
+</script>
+<th:block th:replace="~{./common/thymeleafView::setContent(~{::.content})}">
+  <div class="content">
+    <div class="order-wrap">
+      <div class="text-wrap">
+        <p>상품조회</p>
+        <p>❉ 조회 또는 수정을 원하시면 원하는 항목을 선택해주세요. </p>
+      </div>
+      <div class="order-title">
+        <div class="filter-content">
+          <div class="filter-main">
+            <h3>상세내역검색</h3>
+            <button class="filter-button">검색하기</button>
+          </div>
+          <table>
+            <tr>
+              <td><p>카테고리</p></td>
+              <td><input type="text"></td>
+              <td><p>공급업체</p></td>
+              <td><input type="text"></td>
+              <td><p>상품명</p></td>
+              <td><input type="text"></td>
+            </tr>
+            <tr>
+              <td><p>계약상태</p></td>
+              <td><input type="text"></td>
+              <td><p>계약만료예정</p></td>
+              <td><input type="text"></td>
+              <td><p>계약담당자</p></td>
+              <td><input type="text"></td>
+            </tr>
+            <tr>
+              <td><p>계약상태</p></td>
+              <td><input type="text"></td>
+              <td><p>계약만료예정</p></td>
+              <td><input type="text"></td>
+              <td><p>계약담당자</p></td>
+              <td><input type="text"></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAll"></th>
+            <th>상품번호</th>
+            <th>카테고리</th>
+            <th>공급업체</th>
+            <th>상품명</th>
+            <!-- <th>상품설명</th> -->
+            <th>판매가격</th>
+            <th>상품이미지</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="vo : ${list}">
+            <td><input type="checkbox" class="checkbox"></td>
+            <td th:text="${vo.productNo}" onclick="handleClick(this.innerHTML)"></td>
+            <td th:text="${vo.categoryName}" onclick="handleClick(this.innerHTML)"></td>
+            <td th:text="${vo.supplierName}" onclick="handleClick(this.innerHTML)"></td>
+            <td th:text="${vo.productName}" onclick="handleClick(this.innerHTML)"></td>
+            <!-- <td th:text="${vo.productContent}" onclick="handleClick(this.innerHTML)"></td> -->
+            <td th:text="${vo.productPrice}" onclick="handleClick(this.innerHTML)"></td>
+            <td onclick="handleClick(this.innerHTML)"><img th:src="@{/inventory/displayImg/{productImg}(productImg=${vo.productImg})}"></td>
+            <td th:text="${vo.productRemark}" onclick="handleClick(this.innerHTML)"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="buttons">
+        <div class="button-left"></div>
+        <button class="button-regist button-right" onclick="handleClick2(this.innerHTML)">상품 등록</button>
+      </div>
+
+      <div class="center">
+        <div class="page">
+          <th:block th:replace="~{./inventory/productPagination::page(${pageVO})}"></th:block>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 등록 팝업 -->
+    <div id="popup-regist" class="popup-regist">
+      <form action="putProduct" method="post" enctype="multipart/form-data">
+        <div class="popup-content">
+          <h2>상품등록</h2>
+          <div class="popup-list">
+            <table>
+              <tbody>
+                <tr>
+                  <td><p>공급업체</p></td>
+                  <td><select name="supplierNo" id="supplierNo" onchange="changeSupplierNo(event)"></select></td>
+                  <td><p>사업자번호</p></td>
+                  <td><input type="text" id="supplierBusinessNo" disabled></td>
+                </tr>
+                <tr>
+                  <td><p>담당자</p></td>
+                  <td><input type="text" id="managerName" disabled></td>
+                  <td><p>담당자 연락처</p></td>
+                  <td><input type="text" id="managerPhone" disabled></td>
+                </tr>
+                <tr>
+                  <td><p>카테고리</p></td>
+                  <td><select name="categoryNo" id="categoryNo"></select></td>
+                </tr>
+                <tr>
+                  <td><p>상품명</p></td>
+                  <td><input type="text" name="productName" id="productName"></td>
+                  <td><p>판매정가</p></td>
+                  <td><input type="text" name="productPrice" id="productPrice"></td>
+                </tr>
+                <tr>
+                  <td><p>안전재고수량</p></td>
+                  <td><input type="text" name="safetyQuantity" id="safetyQuantity"></td>
+                  <td><p>상품이미지</p></td>
+                  <td><input type="file" name="file" id="productImg"></td>
+                </tr>
+                <tr>
+                  <td><p>상품설명</p></td>
+                  <td colspan="3"><textarea rows="4" name="productContent" id="productContent"></textarea></td>
+                </tr>
+                <tr>
+                  <td><p>비고</p></td>
+                  <td colspan="3"><input type="text" name="productRemark" id="productRemark"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="popup-button">
+            <div class="button-left">
+            </div>
+            <div class="button-right">
+              <button type="submit">등록</button>
+              <button type="button" class="close-btn2">닫기</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+    <!-- 수정 팝업 -->
+    <div id="popup-modify" class="popup-modify">
+      <form name="modifyForm" action="modifyForm" method="post">
+        <div class="popup-content">
+          <h2>계약 상세보기</h2>
+          <div class="popup-list">
+            <table>
+              <tbody>
+              <tr>
+                <td>
+                  <p>고객사명</p>
+                </td>
+                <td><input type="text"></td>
+                <td>
+                  <p>계약시작일</p>
+                </td>
+                <td><input type="date"></td>
+              </tr>
+              <tr>
+                <td>
+                  <p>계약담당자</p>
+                </td>
+                <td><input type="text"></td>
+                <td>
+                  <p>계약종료일</p>
+                </td>
+                <td><input type="date"></td>
+              </tr>
+              <tr>
+                <td>
+                  <p>상품품목명</p>
+                </td>
+                <td><input type="text" name="product-name"></td>
+                <td class="product-price">
+                  <p>책정거래가</p>
+                </td>
+                <td><input type="text" name="price"></td>
+
+                <!-- <td><button type="button"
+                    id="add-item-btn">+</button></td> -->
+              </tr>
+              <tr>
+                <td class="contract-status">
+                  <p>계약상태</p>
+                </td>
+                <td><select>
+                  <option>선택하세요.</option>
+                  <option>승인</option>
+                  <option>반려</option>
+                </select></td>
+                <td>
+                  <p>계약만료예정</p>
+                </td>
+                <td><input type="text"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="popup-button">
+            <div class="button-left">
+              <button>계약서 첨부</button>
+            </div>
+            <div class="button-right">
+              <button type="submit">등록</button>
+              <button type="button" class="close-btn3">닫기</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</th:block>
+
+<script>
+  // 전체 선택 체크박스
+  const selectAllCheckbox = document.getElementById('selectAll');
+  // 각 체크박스들
+  const checkboxes = document.querySelectorAll('.checkbox');
+  // '전체 선택' 체크박스를 클릭했을 때 실행되는 함수
+  selectAllCheckbox.addEventListener('change', function () {
+      checkboxes.forEach(function (checkbox) {
+          checkbox.checked = selectAllCheckbox.checked;
+      });
+  });
+
+  //팝업창 열기 및 닫기 기능
+  const openResistPopup = document.getElementById('popup-regist');
+  const openModifyPopup = document.getElementById('popup-modify');
+  const closeRegistPopup = document.querySelector('.close-btn2');
+  const closeModifyPopup = document.querySelector('.close-btn3');
+
+  //팝업창 열기
+  function handleClick2(tdValue) { //등록페이지 팝업 열기
+    $.ajax({
+      url: '/inventory/getSupplierList',
+      type: 'get',
+      dataType: 'json',
+      success: function(data) {
+        var html = '<option value=' + 0 + '>- 공급업체 -</option>';
+        $.each(data, function(index, obj) {
+          html += '<option value=' + obj.supplierNo + '>' + obj.supplierName + '</option>';
+        });
+        $('#supplierNo').html(html);
+      },
+      error: function() {
+        alert('error');
+      }
+    });
+
+    $.ajax({
+      url: '/inventory/getCategoryList',
+      type: 'get',
+      dataType: 'json',
+      success: function(data) {
+        var html = '<option value=' + 0 + '>- 카테고리 -</option>';
+        $.each(data, function(index, obj) {
+          html += '<option value=' + obj.categoryNo + '>' + obj.categoryName + '</option>';
+        });
+        $('#categoryNo').html(html);
+      },
+      error: function() {
+        alert('error');
+      }
+    });
+    openResistPopup.style.display = 'block';
+  }
+
+  function changeSupplierNo(event) {
+    $.ajax({
+      url: '/inventory/getSupplierContent',
+      type: 'get',
+      data: {supplierNo : event.target.value},
+      dataType: 'json',
+      success: function(data) {
+        $('#supplierNo').val(data.supplierNo);
+        $('#supplierBusinessNo').val(data.supplierBusinessNo);
+        $('#managerName').val(data.managerName);
+        $('#managerPhone').val(data.managerPhone);
+        $('#categoryNo').val('0').prop('selected', true);
+        $('#productName').val('');
+        $('#productPrice').val('');
+        $('#safetyQuantity').val('');
+        $('#productImg').val('');
+        $('#productContent').val('');
+        $('#productRemark').val('');
+      },
+      error: function() {
+        $('#supplierNo').val('0').prop('selected', true);
+        $('#supplierBusinessNo').val('');
+        $('#managerName').val('');
+        $('#managerPhone').val('');
+        $('#categoryNo').val('0').prop('selected', true);
+        $('#productName').val('');
+        $('#productPrice').val('');
+        $('#safetyQuantity').val('');
+        $('#productImg').val('');
+        $('#productContent').val('');
+        $('#productRemark').val('');
+      }
+    });
+  }
+
+  function handleClick(tdValue) { //수정페이지 팝업 열기
+      openModifyPopup.style.display = 'block';
+  }
+
+  //팝업창 닫기
+  function closePopupRegist() {
+      openResistPopup.style.display = 'none'; //등록페이지 팝업 열기
+  }
+
+  function closePopupModify() {
+      closeResistPopup.style.display = 'none'; //수정페이지 팝업 닫기
+  }
+
+  // 닫기 버튼 클릭 시 팝업창 닫기
+  closeRegistPopup.addEventListener('click', closePopupRegist); //--- 닫기 버튼
+  closeModifyPopup.addEventListener('click', closePopupModify); //--- 닫기 버튼
+</script>
+</html>

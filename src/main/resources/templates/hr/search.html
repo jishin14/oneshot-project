@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="search.css">
+    <title>검색팝업</title>
+</head>
+<body>
+<!-- 메인 팝업창 -->
+<div class="searchPopup" id="contractPopup">
+    <div class="searchContent" id="draggablePopup">
+        <div class="searchPopupHeader" id="popupHeader">
+            <span>사원 검색</span>
+        </div>
+        <form class="search-form">
+            <div class="form-row">
+                <div>
+                    <label for="department" class="searchLabel">부서명</label>
+                    <input type="text" id="department" class="searchInput">
+                </div>
+                <div>
+                    <label for="employeeRank" class="searchLabel">직급</label>
+                    <input type="text" id="employeeRank" class="searchInput">
+                </div>
+                <div>
+                    <label for="employeeHiredate" class="searchLabel">입사일</label>
+                    <input type="date" id="employeeHiredate" class="searchInput">
+                </div>
+                <div class="searchPopupButtons">
+                    <button type="button" class="popSearch">검색</button>
+                    <button type="button" class="searchClose" id="closePopupButton">닫기</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+

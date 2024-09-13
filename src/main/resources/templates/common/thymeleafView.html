@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="setContent(content)">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/common/css/thymeleafView.css" />
+    <link rel="stylesheet" href="/inventory/css/supplier.css">
+    <link rel="stylesheet" href="/inventory/css/product.css" />
+    <link rel="stylesheet" href="/sales/css/contract.css">
+    <!--<link rel="stylesheet" href="/sales/css/order.css">-->
+</head>
+<body>
+<nav class="navbar">
+    <div class="logo_item">
+        <i class="sidebar" id="sidebarOpen"></i>
+        <img src="../../common/img/Logo.png" alt="oneshot" style="width: 180px; border-radius: 0px;"></i>
+    </div>
+
+    <div class="navbar_content">
+        <i class='bx bx-sun' id="darkLight"></i>
+        <img src="../../common/img/userCircle.png" class="profile" />
+    </div>
+</nav>
+
+<div class="sidebar_content">
+    <nav class="sidebar">
+        <div class="menu_content">
+            <ul class="menu_items">
+                <li class="item">
+                    <div class="nav_link submenu_item">
+                <span class="navlink_icon">
+                  <i class='bx bxs-home'></i>
+                </span>
+                        <span class="navlink">
+                  <a href="#"></a>홈
+                </span>
+                    </div>
+                </li>
+
+                <li class="item">
+                    <div class="nav_link submenu_item" id="mainCategory1">
+                <span class="navlink_icon">
+                  <i class='bx bxs-user'></i>
+                </span>
+                        <span class="navlink">인사관리</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+
+                    <ul class="submenu">
+                        <a href="#" class="nav_link sublink" id="subCategory1">사원관리</a>
+                        <a href="#" class="nav_link sublink" id="subCategory2">부서관리</a>
+                    </ul>
+                </li>
+
+                <li class="item">
+                    <div class="nav_link submenu_item" id="mainCategory2">
+                <span class="navlink_icon">
+                  <i class='bx bxs-archive'></i>
+                </span>
+                        <span class="navlink">재고관리</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+
+                    <ul class="submenu">
+                        <a href="#" class="nav_link sublink">재고내역관리</a>
+                        <a href="/product/productList" class="nav_link sublink" id="subCategory1">구매내역관리</a>
+                        <a href="/inventory/supplierList" class="nav_link sublink" id="subCategory2">공급업체관리</a>
+                    </ul>
+                </li>
+
+                <li class="item">
+                    <div class="nav_link submenu_item" id="mainCategory3">
+                <span class="navlink_icon">
+                  <i class='bx bxs-briefcase-alt'></i>
+                </span>
+                        <span class="navlink">영업관리</span>
+                        <i class="bx bx-chevron-right arrow-left"></i>
+                    </div>
+
+                    <ul class="submenu">
+                        <a href="/sales/contract" class="nav_link sublink" id="subCategory1">거래가격관리</a>
+                        <a href="/sales/order" class="nav_link sublink" id="subCategory2">판매내역관리</a>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="bottom_content">
+                <div class="bottom expand_sidebar">
+                    <span> Expand</span>
+                </div>
+                <div class="bottom collapse_sidebar">
+                    <span>로그아웃</span>
+                    <i class='bx bx-log-out'></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content">
+            <th:block th:replace="${content}"></th:block>
+        </div>
+    </div>
+
+<script>
+    const body = document.querySelector("body");
+    const darkLight = document.querySelector("#darkLight");
+    const sidebar = document.querySelector(".sidebar");
+    const submenuItems = document.querySelectorAll(".submenu_item");
+    const sidebarOpen = document.querySelector("#sidebarOpen");
+    const sidebarClose = document.querySelector(".collapse_sidebar");
+    const sidebarExpand = document.querySelector(".expand_sidebar");
+    sidebarOpen.addEventListener("click", () => sidebar.classList.toggle("close"));
+
+    sidebarClose.addEventListener("click", () => {
+      sidebar.classList.add("close", "hoverable");
+    });
+    sidebarExpand.addEventListener("click", () => {
+      sidebar.classList.remove("close", "hoverable");
+    });
+
+    sidebar.addEventListener("mouseenter", () => {
+      if (sidebar.classList.contains("hoverable")) {
+        sidebar.classList.remove("close");
+      }
+    });
+    sidebar.addEventListener("mouseleave", () => {
+      if (sidebar.classList.contains("hoverable")) {
+        sidebar.classList.add("close");
+      }
+    });
+
+    darkLight.addEventListener("click", () => {
+      body.classList.toggle("dark");
+      if (body.classList.contains("dark")) {
+        document.setI
+        darkLight.classList.replace("bx-sun", "bx-moon");
+      } else {
+        darkLight.classList.replace("bx-moon", "bx-sun");
+      }
+    });
+
+    submenuItems.forEach((item, index) => {
+      item.addEventListener("click", () => {
+        item.classList.toggle("show_submenu");
+        submenuItems.forEach((item2, index2) => {
+          if (index !== index2) {
+            item2.classList.remove("show_submenu");
+          }
+        });
+      });
+    });
+
+    if (window.innerWidth < 768) {
+      sidebar.classList.add("close");
+    } else {
+      sidebar.classList.remove("close");
+    }
+
+</script>
+</body>
+</th:block>
+</html>
